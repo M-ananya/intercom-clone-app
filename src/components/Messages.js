@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { AppContext } from '../App';
 
 const Messages = () => {
+    //const { messages, socket } = useContext(AppContext);
     const {socket} = useContext(AppContext);
     const [messages, setMessages] = useState([]);
 
@@ -34,19 +35,33 @@ const Messages = () => {
     }, [socket]);
 
     const handleDelete = (id) => {
+        if (!id) return;
         socket.emit('deleteMessage', id);
     };
+
+
+    // const handleDelete = (id) => {
+    //     socket.emit('deleteMessage', id);
+    // };
 
     return (
         <div>
             <h2>Messages</h2>
             <div className="messages-list">
-                {messages.map((message, index) => (
+                {messages.map((msg) => (
+                    <div key={msg.id} className="message">
+                        <strong>{msg.user}</strong>: {msg.text}{' '}
+                        <span>{new Date(msg.timestamp).toLocaleTimeString()}</span>
+                        <button onClick={() => handleDelete(msg.id)} className="delete-button">Delete</button>
+                    </div>
+                ))}
+
+                {/* {messages.map((message, index) => (
                     <div key={index} className="message">
                         <strong>{message.user}</strong>: {message.text} <span>{new Date(message.timestamp).toLocaleTimeString()}</span>
                         <button onClick={() => handleDelete(message.id)} className="delete-button">Delete</button>
                     </div>
-                ))}
+                ))} */}
             </div>
         </div>
     );

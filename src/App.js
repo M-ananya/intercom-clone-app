@@ -28,9 +28,14 @@ function App() {
       setMessages(prevMessages => [...prevMessages, message]);
     });
 
-    socket.on('messageDeleted', (messageId) => {
-      setMessages(prev => prev.filter(msg => msg.id !== messageId));
+    socket.on('messageDeleted', (deletedId) => {
+      console.log('Message deleted:', deletedId);
+      setMessages((prev) => prev.filter((msg) => msg.id !== deletedId));
     });
+
+    // socket.on('messageDeleted', (messageId) => {
+    //   setMessages(prev => prev.filter(msg => msg.id !== messageId));
+    // });
 
     return () => {
       socket.off('loadMessages');
@@ -50,7 +55,7 @@ function App() {
                     <div className="main-content">
                         <Sidebar />
                         <Routes>
-                            <Route path="/home" element={username ? <ChatWindow username={username} /> : <Login onLogin={setUsername} />} />
+                            <Route path="/chat" element={username ? <ChatWindow username={username} /> : <Login onLogin={setUsername} />} />
                             <Route path="/messages" element={username ? <Messages /> : <Login onLogin={setUsername} />} />
                             <Route path="/settings" element={username ? <Settings /> : <Login onLogin={setUsername} />} />
                             <Route path="/dashboard" element={username ? <Dashboard /> : <Login onLogin={setUsername} />} />
